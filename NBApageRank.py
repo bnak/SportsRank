@@ -4,7 +4,9 @@ from sys import argv
 import re
 import random
 import pprint
-#script, filename = argv
+from numpy import linalg 
+from scipy.linalg import eig
+
 
 class Node(object):
     def __init__(self, name):
@@ -77,8 +79,10 @@ def build_matrix(nodes):
             col_index = team_index[item]
             A[i][col_index] = pointDiff
 
-
     return A
+
+def pageRank(matrix):
+
 
 def main():
 
