@@ -14,6 +14,8 @@ class Node(object):
     def add_loss(self, oTeam, pointDiff):
         self.losses[oTeam] = self.losses.get(oTeam, 0) + pointDiff
 
+
+
 def load_data(my_file):
     """Reads input file and creates nodes."""
 
@@ -59,15 +61,31 @@ def build_graph(games):
     return nodes
 
 def build_matrix(nodes):
+    # Adjacency matrix A with A[row][column]
+    # Rows are losers, and entries are the point differential between col team
+    A = [[0 for x in range(30)] for x in range(30)] 
+    teams = sorted(nodes.keys()) #array of teams alphabetically
+    team_index = {}
+
+    for i in range(len(teams)): 
+        team_index[teams[i]] = i
+
+    for i in range(len(teams)):
+        node = nodes[teams[i]]
+        for item in node.losses.keys(): 
+            pointDiff = node.losses[item]
+            col_index = team_index[item]
+            A[i][col_index] = pointDiff
+
+
+    return A
 
 def main():
 
 
     script, file1 = argv
     nodes = build_graph(load_data(file1))
-    pprint.pprint(nodes['Milwaukee Bucks'].losses)
-    print len(nodes['Utah Jazz'].losses)
-    print len(nodes['Milwaukee Bucks'].losses)
+    A =  build_matrix(nodes)
 
 
 if __name__ == '__main__':
