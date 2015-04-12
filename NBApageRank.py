@@ -4,8 +4,8 @@ from sys import argv
 import re
 import random
 import pprint
-from numpy import linalg 
-from scipy.linalg import eig
+import numpy as np
+
 
 
 class Node(object):
@@ -44,7 +44,7 @@ def load_data(my_file):
             winner = gameData[2]
             loser = gameData[4]
             pointDiff = int(gameData[3]) - int(gameData[5])
-            
+           
         games.append([loser, winner, pointDiff])
 
     
@@ -65,9 +65,10 @@ def build_graph(games):
 def build_matrix(nodes):
     # Adjacency matrix A with A[row][column]
     # Rows are losers, and entries are the point differential between col team
-    A = [[0 for x in range(30)] for x in range(30)] 
+    A = [[0 for x in range(len(nodes.keys()))] for x in range(len(nodes.keys()))] 
     teams = sorted(nodes.keys()) #array of teams alphabetically
     team_index = {}
+
 
     for i in range(len(teams)): 
         team_index[teams[i]] = i
@@ -77,12 +78,44 @@ def build_matrix(nodes):
         for item in node.losses.keys(): 
             pointDiff = node.losses[item]
             col_index = team_index[item]
-            A[i][col_index] = pointDiff
+            A[i][col_index] = float(pointDiff)
 
+    print team_index
     return A
 
-def pageRank(matrix):
+def markovMatrix(matrixA):
+    A = np.array(matrixA)
+    #A[row][column]
 
+    H = [[0 for x in range(len(A))] for x in range(len(A))] 
+    #H is the Markov Matrix
+
+    for i in range(len(A)):
+        row_sum = np.sum(A[i])
+        for j in range(len(A[i])):
+            H[i][j] = float(A[i][j])/row_sum
+
+
+    return H
+
+def pageRank(matrixA):
+    alpha = .85 #parameter
+    convergence = 0.01
+    checkSteps = 10
+    A = np.array(matrixA)
+    H = markovMatrix(A)
+
+    return H
+
+def sumColumn(m):
+    matrixSum = 0
+    for i in range(len(m[0])):
+        total = 0
+        for j in range(len(m)):
+            total += m[j][i]
+        print total
+        matrixSum += total
+    return matrixSum
 
 def main():
 
@@ -90,6 +123,10 @@ def main():
     script, file1 = argv
     nodes = build_graph(load_data(file1))
     A =  build_matrix(nodes)
+    H = pageRank(A)
+    print sumColumn(H)
+
+
 
 
 if __name__ == '__main__':
