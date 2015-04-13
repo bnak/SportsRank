@@ -5,6 +5,8 @@ import re
 import random
 import pprint
 import numpy as np
+from scipy import linalg
+from scipy.sparse import csc_matrix
 
 
 
@@ -81,7 +83,7 @@ def build_matrix(nodes):
             A[i][col_index] = float(pointDiff)
 
     print team_index
-    return A
+    return A, team_index
 
 def markovMatrix(matrixA):
     A = np.array(matrixA)
@@ -99,32 +101,38 @@ def markovMatrix(matrixA):
     return H
 
 def pageRank(matrixA):
-    alpha = .85 #parameter
-    convergence = 0.01
-    checkSteps = 10
+
     A = np.array(matrixA)
     H = markovMatrix(A)
 
-    return H
+    w, vl, vr = linalg.eig(H, left = True)
+    vl = vl[:,0].T
+  
+    return vl
 
-def sumColumn(m):
-    matrixSum = 0
-    for i in range(len(m[0])):
-        total = 0
-        for j in range(len(m)):
-            total += m[j][i]
-        print total
-        matrixSum += total
-    return matrixSum
+def printResults(vl, team_index):
+    top10= []
+    teams = sorted(team_index.keys())
+    for i in range(5):
+        ind = np.argmax(vl)
+        top10.append(teams[ind])
+        vl[ind] = 0
+    return top10
+
+
+
 
 def main():
 
 
     script, file1 = argv
     nodes = build_graph(load_data(file1))
-    A =  build_matrix(nodes)
-    H = pageRank(A)
-    print sumColumn(H)
+    A, team_index =  build_matrix(nodes)
+    #pprint.pprint(markovMatrix(A))
+    pi = pageRank(A)
+    pprint.pprint(pi)
+    pprint.pprint(printResults(pi, team_index))
+
 
 
 
