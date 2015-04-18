@@ -106,14 +106,21 @@ def pageRank(matrixA):
     H = markovMatrix(A)
 
     w, vl, vr = linalg.eig(H, left = True)
-    vl = vl[:,0].T
-  
+    vl = np.absolute(vl[:,0].T)
+    #vl = np.linalg.eig(H)
+    #print vl
+    '''for i in range(30):
+        x = vl[:,i].T
+        if (x > 0).all(): 
+            print i'''
+    #x = np.allclose(np.dot(vl[:,0].T, T))
+    
     return vl
 
 def printResults(vl, team_index):
     top10= []
     teams = sorted(team_index.keys())
-    for i in range(5):
+    for i in range(10):
         ind = np.argmax(vl)
         top10.append(teams[ind])
         vl[ind] = 0
@@ -128,7 +135,6 @@ def main():
     script, file1 = argv
     nodes = build_graph(load_data(file1))
     A, team_index =  build_matrix(nodes)
-    #pprint.pprint(markovMatrix(A))
     pi = pageRank(A)
     pprint.pprint(pi)
     pprint.pprint(printResults(pi, team_index))
