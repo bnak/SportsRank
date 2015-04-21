@@ -1,11 +1,14 @@
 from sys import argv
 import re
 
+'''Script to trim csv file to build directed graph from a subset of teams (single division or conference)
+Writes relevant games to a new file
+Used to create smaller example of just Central division in NBA'''
+
 def trim_data(my_file, output):
 
     f = open(my_file)
     filetext = f.readlines()
-
 
     f.close()
 
