@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#Beth Nakamura, Math 462, April 2015
 
 from sys import argv
 import re
@@ -6,7 +6,6 @@ import random
 import pprint
 import numpy as np
 from scipy import linalg
-from scipy.sparse import csc_matrix
 
 class Node(object):
     def __init__(self, name):
@@ -22,11 +21,9 @@ def load_data(my_file):
     filename is read in as an argument from terminal (see main() function)
     INPUT: my_file - raw csv data of games
     OUTPUT: games - array of games in format games[i] = [loser, winner, pointDiff]"""
-
     f = open(my_file)
     filetext = f.readlines()
     f.close()
-
     filetext = filetext[2:] #eliminate header lines
     games = []
 
@@ -88,7 +85,6 @@ def markovMatrix(matrixA):
     '''
     A = np.array(matrixA)
     H = [[0 for x in range(len(A))] for x in range(len(A))] 
-    #H is the Markov matrix
     for i in range(len(A)):
         row_sum = np.sum(A[i])
         for j in range(len(A[i])):
