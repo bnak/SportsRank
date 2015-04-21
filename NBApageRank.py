@@ -8,8 +8,6 @@ import numpy as np
 from scipy import linalg
 from scipy.sparse import csc_matrix
 
-
-
 class Node(object):
     def __init__(self, name):
         self.name = name
@@ -19,12 +17,10 @@ class Node(object):
         self.losses[oTeam] = self.losses.get(oTeam, 0) + pointDiff
         #Either adds a new loss, or updates the overall pointDiff
 
-
-
 def load_data(my_file):
     """Reads input file and creates nodes. Check that indicies align with data; 
     filename is read in as an argument from terminal (see main() function)
-    INPUT: my_file: raw csv data of games
+    INPUT: my_file - raw csv data of games
     OUTPUT: games - array of games in format games[i] = [loser, winner, pointDiff]"""
 
     f = open(my_file)
@@ -44,8 +40,7 @@ def load_data(my_file):
             winner = gameData[2]
             loser = gameData[4]
             pointDiff = int(gameData[3]) - int(gameData[5])
-        games.append([loser, winner, pointDiff])
-   
+        games.append([loser, winner, pointDiff])  
     return games
 
 def build_graph(games):
@@ -64,11 +59,11 @@ def build_graph(games):
 def build_matrix(nodes):
     '''Builds the point differential matrix from nodes
     INPUT:
-        nodes:  with nodes['team name'] = object node of team 
+        nodes - with nodes['team name'] = object node of team 
     OUTPUT: 
-        team_index: team_index['team name'] = index corresponding to row & column in A
-        A: oint differential matrix with A[row][column]
-            Rows are losers, and entries are the point differential between col team
+        team_index - team_index['team name'] = index corresponding to row & column in A
+        A: point differential matrix with A[row][column]
+            Rows are losers, and entries are the point differential between column team
     '''
     A = [[0 for x in range(len(nodes.keys()))] for x in range(len(nodes.keys()))] 
     teams = sorted(nodes.keys()) #array of teams alphabetically
@@ -83,34 +78,42 @@ def build_matrix(nodes):
             pointDiff = node.losses[item]
             col_index = team_index[item]
             A[i][col_index] = float(pointDiff)
-
     return A, team_index
 
 def markovMatrix(matrixA):
+    '''Creates Markov matrix by dividing each entry in A by the sum of the row
+    INPUT: A - point differential matrix with A[row][column]
+            Rows are losers, and entries are the point differential between col team
+    OUTPUT: H - Markov matrix
+    '''
     A = np.array(matrixA)
-
     H = [[0 for x in range(len(A))] for x in range(len(A))] 
-    #H is the Markov Matrix
-
+    #H is the Markov matrix
     for i in range(len(A)):
         row_sum = np.sum(A[i])
         for j in range(len(A[i])):
             H[i][j] = float(A[i][j])/row_sum
-
-
     return H
 
 def pageRank(matrixA):
-
+    '''Returns the left eigenvector (the PageRank vector) of the input matrix
+    INPUT: H - Markov matrix
+    OUTPUT: vl - left eigenvector, or the PageRank vector
+    '''
     A = np.array(matrixA)
     H = markovMatrix(A)
-
     w, vl, vr = linalg.eig(H, left = True)
     vl = np.absolute(vl[:,0].T)
-    
     return vl
 
 def printResults(vl, team_index):
+    '''Uses the team_index dictionary to interpret the results from the PageRank vector
+    INPUT: 
+        vl - left eigenvector, or the PageRank vector
+        team_index - team_index['team name'] = index corresponding to row & column in A
+    OUTPUT: 
+        top10: arrray of top10 teams based on PageRank vector
+    '''
     top10= []
     teams = sorted(team_index.keys())
     for i in range(10):
@@ -121,17 +124,12 @@ def printResults(vl, team_index):
 
 
 def main():
-
     script, file1 = argv
     nodes = build_graph(load_data(file1))
     A, team_index =  build_matrix(nodes)
     pi = pageRank(A)
     pprint.pprint(pi)
     pprint.pprint(printResults(pi, team_index))
-
-
-
-
 
 if __name__ == '__main__':
     main()
