@@ -59,7 +59,7 @@ def build_matrix(nodes):
         nodes - with nodes['team name'] = object node of team 
     OUTPUT: 
         team_index - team_index['team name'] = index corresponding to row & column in A
-        A: point differential matrix with A[row][column]
+        A - point differential matrix with A[row][column]
             Rows are losers, and entries are the point differential between column team
     '''
     A = [[0 for x in range(len(nodes.keys()))] for x in range(len(nodes.keys()))] 
