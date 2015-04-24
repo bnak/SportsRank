@@ -7,9 +7,9 @@ See [report](https://github.com/bnak/SportsRank/blob/master/SportsRank.pdf) abou
 
 Datasets are from http://www.basketball-reference.com/ and http://www.hockey-reference.com/
 
-Google’s [PageRank algorithm](http://en.wikipedia.org/wiki/PageRank) allows efficient ranking of webpages by creating a directed graph of the web. By considering each webpage a node and hyperlinks as the arcs, the resulting Markov matrix provides the left steady-state eigenvector; this PageRank vector provides the relative probabilities each webpage, and thus a ranking. PageRank provides a ranking of a complex network using a single measure, the number and direction of hyperlinks. SportsRank applies this model to athletics, demonstrated here with the NBA. 
+Google’s [PageRank algorithm](http://en.wikipedia.org/wiki/PageRank) allows efficient ranking of webpages by creating a directed graph of the web. By considering each webpage a node and hyperlinks as the arcs, the resulting Markov matrix provides the left steady-state eigenvector; this PageRank vector provides the relative probabilities each webpage, and thus a ranking. PageRank provides a ranking of a complex network using a single measure, the number and direction of hyperlinks. SportsRank applies this model to athletics, demonstrated here with the NBA. This model examines whether there is a better way of ranking sports compared to the standard win-loss method of ranking.
 
-Each team is a node, with the arc from node i to node j carrying the value of the total amount team i lost to team j over all games played in a season. 
+We consider each team as a node, with the arc from node i to node j carrying the value of the total amount team i lost to team j over all games played in a season. 
 
 ###Example: NBA Central Division, 2013-2014 Season
 
