@@ -3,7 +3,7 @@
 
 To run from terminal: ```python NBApageRank.py 'nba1415.csv'```
 
-See [report](https://github.com/bnak/SportsRank/blob/master/SportsRank.pdf) about PageRank background and model results.
+See [report](https://www.dropbox.com/s/orekk7ycoc2z5y8/SportsRank.pdf?dl=0) about PageRank background and model results.
 
 Datasets are from http://www.basketball-reference.com/ and http://www.hockey-reference.com/
 
